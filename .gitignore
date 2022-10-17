@@ -1,4 +1,4 @@
 *.csv
-tmp/*
+tmp/*.csv
 001
 
