@@ -96,7 +96,7 @@ if [ ! -f "$csv_file" ]; then
   die "Please check the file path and try again."
 fi
 
-# Create bulk input file
+# Set bulk input file name
 csv_file_bulk="${csv_file%.*}_bulk_input.csv"
 
 # Create bulk input file with proper first line
