@@ -143,7 +143,7 @@ box_folder_list "$base_folder_id" "$base_folder_name" "$output_file_name" 0
 
 
 # search example
-# box search topic --fields type,id,name,parent --csv --content-types name --all
+# box search topic --fields type,id,name,parent --type folder --content-types name --all --csv
 # list items w/ parent
 # box folders:items 178230999536 --csv --fields type,id,name,parent
 
