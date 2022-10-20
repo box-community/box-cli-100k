@@ -100,7 +100,7 @@ fi
 csv_file_bulk="${csv_file%.*}_bulk_input.csv"
 
 # Create bulk input file with proper first line
-echo parent_id,level,itemType,itemID,name,description > "$csv_file_bulk"
+echo parent_id,level,itemType,itemID,name > "$csv_file_bulk"
 
 # Add remaining line line of csv file
 while IFS=, read -r line; do
@@ -109,10 +109,9 @@ while IFS=, read -r line; do
   type=$(echo "$line" | cut -d, -f3)
   id=$(echo "$line" | cut -d, -f4)
   name=$(echo "$line" | cut -d, -f5)
-  description=$(echo "$line" | cut -d, -f6)
 
   if [ "$level" == "1" ]; then
-    echo $parent_id,$level,$type,$id,$name,$description >> "$csv_file_bulk"
+    echo $parent_id,$level,$type,$id,$name >> "$csv_file_bulk"
   fi
   
 done < "$csv_file"
@@ -122,6 +121,15 @@ box shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-ca
 
 # Join csv files
 paste -d, "$csv_file_bulk" "$csv_file_out" > "${csv_file%.*}_shared_links_joined.csv"
+
+# bulk folders get
+# box folders:get --bulk-file-path tree_100k.csv --csv --fields type,id,name,shared_link,parent
+
+# bulk shared-links get
+# box shared-links:get --bulk-file-path tree_100k_shared_links_tmp.csv --csv --fields type,id,name,shared_link,parent
+
+
+
 
 # msg "${RED}Read parameters:${NOFORMAT}"
 # msg "- force: ${force}"

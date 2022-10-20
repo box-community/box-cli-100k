@@ -161,9 +161,9 @@ do
     parent_id=$c_id
     for i in {0..9}
     do
-        new_folder_id=$(box folders:create $parent_id SubTopic_$i --id-only)
-        echo "$parent_id,$new_folder_id,folder,SubTopic_$i" >> ./tmp/folders_2.csv 
-        echo "$parent_id,$new_folder_id,folder,SubTopic_$i"
+        new_folder_id=$(box folders:create $parent_id "$c_name"_"SubTopic_$i" --id-only)
+        echo "$parent_id,$new_folder_id,folder,"$c_name"_"SubTopic_$i"" >> ./tmp/folders_2.csv 
+        echo "$parent_id,$new_folder_id,folder,"$c_name"_"SubTopic_$i""
     done
 done < ./tmp/folders_1.csv
 

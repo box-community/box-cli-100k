@@ -73,7 +73,7 @@ parse_params() {
 
   # check required params and arguments
 #   [[ -z "${param-}" ]] && die "Missing required parameter: param"
-  [[ ${#args[@]} -eq 0 ]] && msg "Missing base folder name" && usage
+  [[ ${#args[@]} -eq 0 ]] && msg "Missing csv file path" && usage
 
   return 0
 }
@@ -96,9 +96,8 @@ if [ ! -f "$csv_file" ]; then
   die "Please check the file path and try again."
 fi
 
-# Create shared links from csv file
-
-echo parent_id,level,itemType,itemID,name,desc,url,effective_access,effective_permission > "$csv_file_out"
+# Create shared links csv file header
+echo parent_id,level,itemType,itemID,name,url,effective_access,effective_permission > "$csv_file_out"
 
 while IFS=, read -r line; do
   parent_id=$(echo "$line" | cut -d, -f1)
@@ -106,17 +105,22 @@ while IFS=, read -r line; do
   type=$(echo "$line" | cut -d, -f3)
   id=$(echo "$line" | cut -d, -f4)
   name=$(echo "$line" | cut -d, -f5)
-  description=$(echo "$line" | cut -d, -f6)
 
   if [ "$level" == "1" ]; then
     # output="no_shared_link,,"
-    output=$(box shared-links:create $id folder --access open --no-can-download --csv --fields url,effective_access,effective_permission | grep -v "url,effective_access,effective_permission")
+    output=$(box shared-links:create $id folder --access open --no-can-download --csv --fields url,effective_access,effective_permission | grep -v "url,effective_access,effective_permission") || echo ""
+    if [ -z "$output" ]; then
+      output=",,"
+    fi
     url=$(echo "$output" | cut -d, -f1)
-    echo $parent_id,$level,$type,$id,$name,$description,$output >> "$csv_file_out"
+    echo $parent_id,$level,$type,$id,$name,$output >> "$csv_file_out"
     msg "${GREEN}Link for ${name}${NOFORMAT}: $url"
   fi
   
 done < "$csv_file"
+
+# remove shared links
+# box shared-links:delete --bulk-file-path tree_100k_shared_links.csv  -q
 
 
 # msg "${RED}Read parameters:${NOFORMAT}"

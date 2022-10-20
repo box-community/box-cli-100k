@@ -73,7 +73,7 @@ parse_params() {
 
   # check required params and arguments
 #   [[ -z "${param-}" ]] && die "Missing required parameter: param"
-  [[ ${#args[@]} -eq 0 ]] && msg "Missing base folder name" && usage
+  [[ ${#args[@]} -eq 0 ]] && msg "Missing base folder id" && usage
 
   return 0
 }
@@ -102,16 +102,21 @@ box_folder_list(){
     local parent_folder_name=$2
     local output_file_name=$3
     local level=$4
-    # box folders:items $parent_folder_id -q --csv --fields type,id,name,description --save-to-file-path ./tmp/"$parent_folder_name.csv"
-    box folders:items $parent_folder_id --csv --fields type,id,name,description | while read -r line; do
+    
+    box folders:items $parent_folder_id --csv --fields type,id,name,parent | while read -r line; do
         type_name=$(echo "$line" | cut -f1 -d,)
         folder_id=$(echo "$line" | cut -f2 -d,)
-        folder_name="$parent_folder_name"_$(echo "$line" | cut -f3 -d,)
-        folder_description=$(echo "$line" | cut -f4 -d,)
-        if [[ "$type_name" == "folder" ]]; then
+        folder_name=$(echo "$line" | cut -f3 -d,)
+        parent_id=$(echo "$line" | cut -f5 -d,)
+        
+        if [ "$type_name" == "folder" ]
+        then
             echo "Folder: $folder_name"
-            echo $parent_folder_id,$level,$type_name,$folder_id,$folder_name,$folder_description >> $output_file_name
-            box_folder_list "$folder_id" "$folder_name" "$output_file_name" "$((level+1))"
+            echo $parent_id,$level,$type_name,$folder_id,$folder_name >> $output_file_name
+            if [ $level -lt 1 ]
+            then
+                box_folder_list "$folder_id" "$folder_name" "$output_file_name" "$((level+1))"
+            fi
         fi
     done 
 }
@@ -133,8 +138,14 @@ output_file_name=tree_"$base_folder_name".csv
 
 # List folders recursively
 echo "Listing folders recursively from $base_folder_name ($base_folder_id)"
-echo parent_id,level,type,id,name,description > $output_file_name
+echo parent_id,level,type,id,name > $output_file_name
 box_folder_list "$base_folder_id" "$base_folder_name" "$output_file_name" 0   
+
+
+# search example
+# box search topic --fields type,id,name,parent --csv --content-types name --all
+# list items w/ parent
+# box folders:items 178230999536 --csv --fields type,id,name,parent
 
 # msg "${RED}Read parameters:${NOFORMAT}"
 # msg "- force: ${force}"
