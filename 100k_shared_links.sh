@@ -8,7 +8,7 @@ script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 usage() {
   cat <<EOF
 
-Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] base_folder_id
+Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] file-path
 
 Create shared links from csv list of folders.
 
