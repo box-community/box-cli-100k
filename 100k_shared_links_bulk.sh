@@ -129,7 +129,7 @@ paste -d, "$csv_file_bulk" "$csv_file_out" > "${csv_file%.*}_shared_links_joined
 # box shared-links:get --bulk-file-path tree_100k_shared_links_tmp.csv --csv --fields type,id,name,shared_link,parent
 
 # remove shared links
-# box shared-links:delete --bulk-file-path tree_100k_shared_linkx_tmp.csv  -q
+# box shared-links:delete --bulk-file-path tree_100k_bulk_input.csv  -q
 
 
 # msg "${RED}Read parameters:${NOFORMAT}"
