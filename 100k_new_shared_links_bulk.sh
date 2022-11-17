@@ -88,7 +88,7 @@ parse_params "$@"
 setup_colors
 
 csv_file="${args[0]}"
-csv_file_out="${csv_file%.*}_shared_links_tmp.csv"
+csv_file_out="${csv_file%.*}_new_shared_links.csv"
 
 # Check if csv file exists
 if [ ! -f "$csv_file" ]; then
@@ -117,10 +117,11 @@ while IFS=, read -r line; do
 done < "$csv_file"
 
 # Create shared links from csv file
-box shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --fields url,effective_access,effective_permission --save-to-file-path $csv_file_out
+# box shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --fields url,effective_access,effective_permission --save-to-file-path $csv_file_out
+ ./boxcli/bin/run shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --save-to-file-path $csv_file_out
 
 # Join csv files
-paste -d, "$csv_file_bulk" "$csv_file_out" > "${csv_file%.*}_shared_links_joined.csv"
+# paste -d, "$csv_file_bulk" "$csv_file_out" > "${csv_file%.*}_shared_links_joined.csv"
 
 # bulk folders get
 # box folders:get --bulk-file-path tree_100k.csv --csv --fields type,id,name,shared_link,parent

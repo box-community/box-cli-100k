@@ -88,7 +88,7 @@ parse_params "$@"
 setup_colors
 
 csv_file="${args[0]}"
-csv_file_out="${csv_file%.*}_shared_links.csv"
+csv_file_out="${csv_file%.*}_new_shared_links.csv"
 
 # Check if csv file exists
 if [ ! -f "$csv_file" ]; then
@@ -97,7 +97,7 @@ if [ ! -f "$csv_file" ]; then
 fi
 
 # Create shared links csv file header
-echo parent_id,level,itemType,itemID,name,url,effective_access,effective_permission > "$csv_file_out"
+echo parent_id,level,itemType,itemID,url,effective_access,effective_permission > "$csv_file_out"
 
 while IFS=, read -r line; do
   parent_id=$(echo "$line" | cut -d, -f1)
@@ -108,12 +108,13 @@ while IFS=, read -r line; do
 
   if [ "$level" == "1" ]; then
     # output="no_shared_link,,"
-    output=$(box shared-links:create $id folder --access open --no-can-download --csv --fields url,effective_access,effective_permission | grep -v "url,effective_access,effective_permission") || echo ""
+    output=$(./boxcli/bin/run shared-links:create $id folder --access open --no-can-download --csv --fields type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission | grep -v "type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission") || echo ""
     if [ -z "$output" ]; then
-      output=",,"
+      output=",,,,"
     fi
-    url=$(echo "$output" | cut -d, -f1)
-    echo $parent_id,$level,$type,$id,$name,$output >> "$csv_file_out"
+    url=$(echo "$output" | cut -d, -f2,3)
+    # url=$(echo "$output" )
+    echo $parent_id,$level,$output >> "$csv_file_out"
     msg "${GREEN}Link for ${name}${NOFORMAT}: $url"
   fi
   
