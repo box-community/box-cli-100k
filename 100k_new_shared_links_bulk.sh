@@ -118,7 +118,7 @@ done < "$csv_file"
 
 # Create shared links from csv file
 # box shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --fields url,effective_access,effective_permission --save-to-file-path $csv_file_out
- ./boxcli/bin/run shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --save-to-file-path $csv_file_out
+ box shared-links:create -y --bulk-file-path $csv_file_bulk --access open --no-can-download --csv --save-to-file-path $csv_file_out
 
 # Join csv files
 # paste -d, "$csv_file_bulk" "$csv_file_out" > "${csv_file%.*}_shared_links_joined.csv"

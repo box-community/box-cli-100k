@@ -108,7 +108,7 @@ while IFS=, read -r line; do
 
   if [ "$level" == "1" ]; then
     # output="no_shared_link,,"
-    output=$(./boxcli/bin/run shared-links:create $id folder --access open --no-can-download --csv --fields type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission | grep -v "type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission") || echo ""
+    output=$(box shared-links:create $id folder --access open --no-can-download --csv --fields type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission | grep -v "type,id,shared_link.url,shared_link.effective_access,shared_link.effective_permission") || echo ""
     if [ -z "$output" ]; then
       output=",,,,"
     fi
