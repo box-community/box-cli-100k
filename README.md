@@ -3,7 +3,7 @@ alt= “box-dev-logo”
 style="margin-left:-10px;"
 width=40%;>
 
-# Sharing 100k folders with the Box Platform
+# Sharing 100k folders with the Box CLI
 
 The Box CLI allows developers to manipulate the content objects in bulk. In this article we're exploring how to share folders in an automated way.
 
